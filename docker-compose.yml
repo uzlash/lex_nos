@@ -1,0 +1,84 @@
+version: "3.7"
+
+services:
+  traefik:
+    container_name: traefik
+    image: traefik:1.7.6-alpine
+    restart: always
+    command: --docker
+    labels:
+      - traefik.frontend.rule=Host:monitor.lexnos.unicoms.ng
+      - traefik.port=8080
+      - traefik.enable=true
+      - traefik.docker.network=frontnet
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+      - $PWD/traefik.toml:/etc/traefik/traefik.toml
+      - $PWD/acme.json:/acme.json
+    ports:
+      - 80:80
+      - 443:443
+      - 8080:8080
+    networks:
+      - frontnet
+
+  backend:
+    #build: ./api
+    image: node:stretch-slim
+    working_dir: /app
+    command: npm run start
+    restart: always
+    depends_on:
+      - mongodb
+      - redisdb
+    labels:
+      - traefik.frontend.rule=Host:lexnos.unicoms.ng
+      - traefik.port=3000
+      - traefik.enable=true
+      - traefik.docker.network=frontnet
+    networks:
+      - frontnet
+    environment:
+      MONGOHOST: mongodb
+      MONGOUSER: lexnosuser
+      MONGODB: lexnosdb
+    volumes:
+      - $PWD/api/:/app
+      - $PWD/api/package.json:/app/package.json
+      - $PWD/xhardisk/uploads:/app/src/uploads
+
+  mongodb:
+    container_name: mongodb
+    image: mongo:latest
+    restart: always
+    labels:
+      - traefik.enable=false
+      - traefik.docker.network=frontnet
+    networks:
+      - frontnet
+    volumes:
+      - $PWD/xhardisk/storage/mongo:/data/db
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: lexnosuser
+      MONGO_INITDB_ROOT_PASSWORD: lexnospass
+      MONGO_INITDB_DATABASE: lexnosdb
+
+  redisdb:
+    container_name: redisdb
+    image: redis:latest
+    restart: always
+    command: bash -c "redis-server --appendonly yes --requirepass 'deFVWYBDY&GGYUHDBGDGHGDHHJSN77848836365yhgdgsfsavvsdgeujfgjfusfjgfs949ejfaf77ehnddydjggi8'"
+    labels:
+      - traefik.enable=false
+      - traefik.docker.network=frontnet
+    networks:
+      - frontnet
+    volumes:
+      - $PWD/xhardisk/storage/redis:/data
+    ports:
+      - "6379:6379"
+
+networks:
+  frontnet:
