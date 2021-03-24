@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import Home from '../views/Home.vue'
+import store from '../store/index'
 
 Vue.use(VueRouter)
 
@@ -65,6 +66,17 @@ const routes = [
 
 const router = new VueRouter({
   routes
+})
+
+// // Working Route Guard
+router.beforeEach((to, from, next) => {
+  const requiresAuth = to.matched.some((record) => record.meta.requiresAuth)
+
+  if (requiresAuth && !store.state.token) {
+    next('/login')
+  } else {
+    next()
+  }
 })
 
 export default router

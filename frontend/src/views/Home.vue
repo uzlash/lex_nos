@@ -95,13 +95,13 @@
                   </td>
                   <td>{{ item.name }}</td>
                   <td>{{ item.phone }}</td>
-                  <td class="primary--text">{{ item.nin }}</td>
+                  <td>{{ item.nin }}</td>
                   <td>{{ item.state }}</td>
                   <td>{{ item.lga }}</td>
                   <td>{{ item.address }}</td>
                   <td>
-                    <div>{{ item.lat.toPrecision(5) }},</div>
-                    <div>{{ item.lng.toPrecision(5) }}</div>
+                    <div>{{ item.coordinates.lat.toPrecision(5) }},</div>
+                    <div>{{ item.coordinates.lng.toPrecision(5) }}</div>
                   </td>
                   <td>
                     {{
@@ -111,9 +111,9 @@
                     }}
                   </td>
                   <td>
-                    <v-icon color="blue" class="mr-2" @click="viewUser(item)">
-                      mdi-eye
-                    </v-icon>
+                    <v-btn icon @click="viewUser(item)">
+                      <v-icon color="blue" class="mr-2"> mdi-eye </v-icon>
+                    </v-btn>
                   </td>
                 </tr>
               </template>
@@ -187,8 +187,10 @@ export default {
         state: "Katsina State",
         lga: "Danmusa",
         address: "no 1 hussaini jalo street rigachikun, Kaduna.",
-        lat: 9.082,
-        lng: 8.6753,
+        coordinates: {
+          lat: 9.082,
+          lng: 8.6753,
+        },
         createdAt: Date.now(),
       },
     ],

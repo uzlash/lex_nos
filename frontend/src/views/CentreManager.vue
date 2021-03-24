@@ -4,19 +4,13 @@
       <v-row>
         <v-col cols="12">
           <v-card>
-            <!-- <v-card-title class="text-body-1 font-weight-bold pa-2">
-              
-              <span>Registered Locations</span>
-
-            </v-card-title>
-            <v-divider></v-divider> -->
             <v-data-table :headers="userHeaders" :items="users" sort-by="name">
               <template v-slot:top>
                 <v-toolbar flat>
                   <v-toolbar-title>Registered Locations</v-toolbar-title>
                   <v-divider class="mx-4" inset vertical></v-divider>
                   <v-spacer></v-spacer>
-                  <v-dialog v-model="dialog" persistent max-width="600px">
+                  <v-dialog v-model="dialogAdd" persistent max-width="600px">
                     <template v-slot:activator="{ on, attrs }">
                       <v-btn
                         class="text-capitalize"
@@ -31,47 +25,67 @@
                     <v-card>
                       <v-card-title>
                         <span class="text-h5 font-weight-thin ml-2"
-                          >Add Institution</span
+                          >Add Location</span
                         ></v-card-title
                       >
                       <v-card-text class="py-0">
                         <v-container>
                           <v-row>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12">
                               <v-text-field
+                                v-model="newCentre.name"
                                 color="primary"
                                 label="Full Name"
                                 solo
-                                prepend-inner-icon="mdi-account"
+                                hide-details="auto"
+                                prepend-icon="mdi-account"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12">
                               <v-text-field
+                                v-model="newCentre.phone"
                                 color="primary"
                                 label="Phone"
                                 solo
-                                prepend-inner-icon="mdi-phone"
+                                hide-details="auto"
+                                prepend-icon="mdi-phone"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12">
                               <v-text-field
+                                type="email"
+                                prepend-icon="mdi-email"
+                                hide-details
                                 color="primary"
-                                label="Full Name"
                                 solo
-                                prepend-inner-icon="mdi-account"
+                                v-model="newCentre.email"
+                                label="Email"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12">
                               <v-text-field
+                                v-model="newCentre.nin"
                                 color="primary"
                                 label="Nin"
                                 solo
-                                prepend-inner-icon="mdi-account"
+                                hide-details="auto"
+                                prepend-icon="mdi-account"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12">
+                              <v-text-field
+                                v-model="newCentre.address"
+                                hide-details="auto"
+                                color="primary"
+                                label="Address"
+                                solo
+                                prepend-icon="mdi-map-marker-outline"
+                              ></v-text-field>
+                            </v-col>
+                            <v-col cols="12" sm="12" md="6">
                               <v-select
-                                prepend-inner-icon="mdi-map"
+                                v-model="newCentre.state"
+                                prepend-icon="mdi-map"
                                 hide-details="auto"
                                 solo
                                 label="State"
@@ -79,9 +93,10 @@
                                 color="primary"
                               />
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12" sm="12" md="6">
                               <v-select
-                                prepend-inner-icon="mdi-map"
+                                v-model="newCentre.lga"
+                                prepend-icon="mdi-map"
                                 hide-details="auto"
                                 solo
                                 label="LGA"
@@ -89,33 +104,52 @@
                                 color="primary"
                               />
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12" sm="12" md="6">
                               <v-text-field
-                                color="primary"
-                                label="Address"
-                                solo
-                                prepend-inner-icon="mdi-map-marker-outline"
-                              ></v-text-field>
-                            </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
-                              <v-text-field
+                                v-model.number="newCentre.coordinates.lat"
+                                hide-details="auto"
                                 color="primary"
                                 label="Latitude"
                                 solo
-                                prepend-inner-icon="mdi-map-marker"
+                                prepend-icon="mdi-map-marker"
                               ></v-text-field>
                             </v-col>
-                            <v-col cols="12" sm="6" md="6" class="py-0 px-2">
+                            <v-col cols="12" sm="12" md="6">
                               <v-text-field
+                                v-model.number="newCentre.coordinates.lng"
                                 color="primary"
                                 label="Longitude"
                                 solo
-                                prepend-inner-icon="mdi-map-marker"
+                                hide-details="auto"
+                                prepend-icon="mdi-map-marker"
                               ></v-text-field>
+                            </v-col>
+                            <!-- <v-col cols="12">
+                              <img
+                                hide-details="auto"
+                                v-if="newCentre.image"
+                                height="200"
+                                width="100%"
+                                :src="imageUrlPreview"
+                              />
+                            </v-col> -->
+                            <v-col cols="12" sm="12" md="6">
+                              <v-file-input
+                                @change="Preview_image"
+                                v-model="newCentre.image"
+                                color="accent"
+                                prepend-icon="mdi-camera"
+                                accept="image/*"
+                                show-size
+                                :clearable="false"
+                                solo
+                                label="Location Image"
+                                hide-details="auto"
+                              ></v-file-input>
                             </v-col>
                             <v-col cols="12" sm="6" md="6">
                               <img
-                                v-if="image"
+                                v-if="newCentre.image"
                                 height="200"
                                 width="100%"
                                 :src="imageUrlPreview"
@@ -128,13 +162,13 @@
                         <v-spacer></v-spacer>
                         <v-btn
                           color="red white--text text-capitalize"
-                          @click="dialog = false"
+                          @click="dialogAdd = false"
                         >
                           Close
                         </v-btn>
                         <v-btn
                           color="accent white--text text-capitalize"
-                          @click="dialog = false"
+                          @click="addLocation()"
                         >
                           Add
                         </v-btn>
@@ -152,7 +186,7 @@
                   </td>
                   <td>{{ item.name }}</td>
                   <td>{{ item.phone }}</td>
-                  <td class="primary--text">{{ item.nin }}</td>
+                  <td>{{ item.nin }}</td>
                   <td>{{ item.state }}</td>
                   <td>{{ item.lga }}</td>
                   <td>{{ item.address }}</td>
@@ -189,6 +223,22 @@ export default {
   name: "Home",
   components: {},
   data: () => ({
+    imageUrlPreview: null,
+    newCentre: {
+      name: "",
+      phone: "",
+      email: "",
+      nin: "",
+      address: "",
+      state: "",
+      lga: "",
+      coordinates: {
+        lat: "",
+        lng: "",
+      },
+      image: null,
+    },
+    dialogAdd: false,
     userHeaders: [
       { text: "Image", value: "image" },
       { text: "Full Name", value: "name", sortable: true },
@@ -203,6 +253,7 @@ export default {
     ],
     users: [
       {
+        id: 1,
         image:
           "https://avatars.githubusercontent.com/u/39749863?s=460&u=c51e45d3b1dd057366d62cc8283a20ea1e93d53c&v=4",
         name: "Usman Murtala",
@@ -218,14 +269,15 @@ export default {
     ],
   }),
   methods: {
-    viewUser(data) {
-      console.log("View User Data", data);
+    Preview_image() {
+      this.imageUrlPreview = URL.createObjectURL(this.newCentre.image);
     },
-    editUser(data) {
-      console.log("Edit User", data);
+    addLocation() {
+      console.log("New Location", this.newCentre);
     },
-    deleteUser(data) {
-      console.log("Delete User", data);
+    viewUser(item) {
+      console.log("Item", item);
+      this.$router.push("/view/" + item.id);
     },
   },
 };

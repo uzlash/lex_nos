@@ -48,8 +48,8 @@
             <div class="text-center mt-3">
               <v-btn
                 @click="signIn()"
-                :loading="loading"
-                :disabled="disabled"
+                :loading="signInMetaData.signInLoading"
+                :disabled="signInMetaData.signInDisabled"
                 block
                 class="text-capitalize white--text mt-10 custom__gradient-button"
                 >Sign In</v-btn
@@ -78,6 +78,14 @@
           </v-card-text>
         </v-card>
       </v-row>
+      <v-snackbar
+        bottom
+        color="warning"
+        timeout="5000"
+        v-model="signInMetaData.signInErrorSnackbar"
+      >
+        {{ signInMetaData.signInErrorPayload }}
+      </v-snackbar>
     </v-container>
   </v-main>
 </template>
@@ -101,6 +109,22 @@ export default {
         (value && value.length >= 6) || "Minimum length is 6 characters",
     },
   }),
+  methods: {
+    signIn() {
+      const signInData = {
+        email: this.email,
+        password: this.password,
+      };
+      if (this.$refs.form.validate()) {
+        this.$store.dispatch("SIGN_IN", signInData);
+      }
+    },
+  },
+  computed: {
+    signInMetaData() {
+      return this.$store.state.signIn;
+    },
+  },
 };
 </script>
 

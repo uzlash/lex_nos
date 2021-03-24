@@ -8,13 +8,17 @@
         @clusterclick="click()"
         @ready="ready"
       >
-        <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng">
-          <v-icon
+        <v-marker
+          v-for="(l, index) in markers"
+          :key="index"
+          :lat-lng="l.latlng"
+        >
+          <!-- <v-icon
             :icon-size="[32, 37]"
             :icon-anchor="[16, 37]"
-            :icon-url="l.customIcon"
-          />
-          <v-popup :content="l.latlng.toString()"></v-popup>
+            :icon-url="iconUrl"
+          /> -->
+          <v-popup :content="l.text"></v-popup>
         </v-marker>
       </v-marker-cluster>
     </v-map>
@@ -22,27 +26,20 @@
 </template>
 
 <script>
-//Code to fix markers not working -- don't remove
-// import { Icon } from "leaflet";
-// delete Icon.Default.prototype._getIconUrl;
-// Icon.Default.mergeOptions({
-//   iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
-//   iconUrl: require("leaflet/dist/images/marker-icon.png"),
-//   shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
-// });
+// Code to fix markers not working -- don't remove
+import { Icon } from "leaflet";
+
+delete Icon.Default.prototype._getIconUrl;
+Icon.Default.mergeOptions({
+  iconRetinaUrl: require("leaflet/dist/images/marker-icon-2x.png"),
+  iconUrl: require("leaflet/dist/images/marker-icon.png"),
+  shadowUrl: require("leaflet/dist/images/marker-shadow.png"),
+});
 
 import * as Vue2Leaflet from "vue2-leaflet";
-import { latLng, Icon, icon } from "leaflet";
-import iconUrl from "leaflet/dist/images/marker-icon.png";
-import shadowUrl from "leaflet/dist/images/marker-shadow.png";
+import { latLng } from "leaflet";
 
 import Vue2LeafletMarkerCluster from "vue2-leaflet-markercluster";
-
-function rand(n) {
-  let max = n + 0.1;
-  let min = n - 0.1;
-  return Math.random() * (max - min) + min;
-}
 
 export default {
   components: {
@@ -50,31 +47,60 @@ export default {
     "v-tilelayer": Vue2Leaflet.LTileLayer,
     "v-icondefault": Vue2Leaflet.LIconDefault,
     "v-marker": Vue2Leaflet.LMarker,
-    "v-icon": Vue2Leaflet.LIcon,
     "v-popup": Vue2Leaflet.LPopup,
     "v-marker-cluster": Vue2LeafletMarkerCluster,
   },
   props: ["id"],
   data() {
-    let locations = [];
-    for (let i = 0; i < 100; i++) {
-      locations.push({
-        id: i,
-        latlng: latLng(rand(9.0765), rand(7.3986)),
-        text: i.toString(),
-        customIcon: iconUrl,
-      });
-    }
-    let customicon = icon(
-      Object.assign({}, Icon.Default.prototype.options, {
-        iconUrl,
-        shadowUrl,
-      })
-    );
-    console.log("custom icon", customicon);
     return {
-      locations,
-      icon: customicon,
+      markers: [
+        {
+          id: 1,
+          latlng: [13.346865014577924, 5.888671875],
+          text: "Sokoto 1",
+        },
+        {
+          id: 1,
+          latlng: [13.261333170798274, 5.42724609375],
+          text: "Sokoto 2",
+        },
+        {
+          id: 1,
+          latlng: [12.768946439455956, 5.20751953125],
+          text: "Sokoto 3",
+        },
+        {
+          id: 1,
+          latlng: [12.897489183755892, 7.6025390625],
+          text: "Katsina 1",
+        },
+        {
+          id: 1,
+          latlng: [12.361465967347373, 7.55859375],
+          text: "Katsina 2",
+        },
+        {
+          id: 1,
+          latlng: [11.910353555774101, 7.580566406250001],
+          text: "Katsina 3",
+        },
+        {
+          id: 1,
+          latlng: [11.781325296112277, 14.2822265625],
+          text: "Borno 1",
+        },
+        {
+          id: 1,
+          latlng: [12.64033830684679, 13.645019531249998],
+          text: "Borno 2",
+        },
+        {
+          id: 1,
+          latlng: [11.845847044118496, 13.11767578125],
+          text: "Borno 3",
+        },
+      ],
+      // icon: customicon,
       clusterOptions: {},
       initialLocation: latLng(9.0778, 8.6775),
       zoom: 7,
@@ -102,15 +128,6 @@ export default {
         this.clusterOptions = { disableClusteringAtZoom: 11 };
       });
     }, 5000);
-
-    // this.markers = [
-    //   {
-    //     text: "Borno Fighter Jet Group 1",
-    //     icon: require("../assets/icons8-fighter-jet-48.png"),
-    //     latlng: { lat: 13.068776734357694, lng: 13.60107421875 },
-    //     value: 10,
-    //   },
-    // ];
   },
 };
 </script>
