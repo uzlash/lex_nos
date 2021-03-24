@@ -1,127 +1,123 @@
 <template>
-  <div class="grey lighten-4" style="height: 100vh">
-    <v-container>
-      <v-row>
-        <!-- Line Chart -->
-        <v-col cols="12" sm="12" md="9">
-          <v-card outlined tile class="custom__card">
-            <v-card-title class="pa-2">
-              <div class="d-flex align-center">
-                <span class="lstick ml-n2 red"></span>
-                <div class="ml-4 mr-1">
-                  <h5 class="subtitle-1">Registrations over time</h5>
-                  <h2
-                    class="font-weight-regular body-2 grey--text text--darken-2"
-                  >
-                    Year 2021
-                  </h2>
-                </div>
+  <div class="grey lighten-4 pa-4" style="height: 100vh">
+    <v-row>
+      <!-- Line Chart -->
+      <v-col cols="12" sm="12" md="9">
+        <v-card outlined tile class="custom__card">
+          <v-card-title class="pa-2">
+            <div class="d-flex align-center">
+              <span class="lstick ml-n2 red"></span>
+              <div class="ml-4 mr-1">
+                <h5 class="subtitle-1">Registrations over time</h5>
+                <h2
+                  class="font-weight-regular body-2 grey--text text--darken-2"
+                >
+                  Year 2021
+                </h2>
               </div>
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-card-text class="">
-              <line-chart
-                :chartdata="lineChartData"
-                :options="lineChartOptions"
-              />
-            </v-card-text>
-          </v-card>
-        </v-col>
-        <v-col cols="12" sm="12" md="3" align-self="center">
-          <v-row>
-            <v-col cols="12">
-              <v-card color="custom__card-bg">
-                <v-card-title class="text-body-1 font-weight-light white--text">
-                  Active States
-                </v-card-title>
-                <v-card-text class="text-h6">
-                  <v-icon color="white" class="mr-2">mdi-map</v-icon>
-                  <span class="white--text">5/36</span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12">
-              <v-card>
-                <v-card-title class="text-body-1 font-weight-light">
-                  Active Local Governments
-                </v-card-title>
-                <v-card-text class="text-h6">
-                  <v-icon color="primary" class="mr-2">mdi-map-marker</v-icon>
-                  <span>5/776 </span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12">
-              <v-card>
-                <v-card-title class="text-body-1 font-weight-light">
-                  Registered Users
-                </v-card-title>
-                <v-card-text class="text-h6">
-                  <v-icon color="primary" class="mr-2">mdi-account</v-icon>
-                  <span>150,000,000</span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-            <v-col cols="12">
-              <v-card>
-                <v-card-title class="text-body-1 font-weight-light">
-                  Users Online
-                </v-card-title>
-                <v-card-text class="text-h6">
-                  <v-icon color="primary" class="mr-2"
-                    >mdi-account-group</v-icon
-                  >
-                  <span>25 </span>
-                </v-card-text>
-              </v-card>
-            </v-col>
-          </v-row>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col cols="12">
-          <v-card>
-            <v-card-title class="text-body-1 font-weight-bold pa-2">
-              Registered Locations
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-data-table :headers="userHeaders" :items="users" sort-by="name">
-              <template v-slot:item="{ item }">
-                <tr>
-                  <td class="pa-2">
-                    <v-avatar size="50">
-                      <v-img :src="item.image"></v-img
-                    ></v-avatar>
-                  </td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.phone }}</td>
-                  <td>{{ item.nin }}</td>
-                  <td>{{ item.state }}</td>
-                  <td>{{ item.lga }}</td>
-                  <td>{{ item.address }}</td>
-                  <td>
-                    <div>{{ item.coordinates.lat.toPrecision(5) }},</div>
-                    <div>{{ item.coordinates.lng.toPrecision(5) }}</div>
-                  </td>
-                  <td>
-                    {{
-                      new Date(item.createdAt).toLocaleString("en-GB", {
-                        hour12: true,
-                      })
-                    }}
-                  </td>
-                  <td>
-                    <v-btn icon @click="viewUser(item)">
-                      <v-icon color="blue" class="mr-2"> mdi-eye </v-icon>
-                    </v-btn>
-                  </td>
-                </tr>
-              </template>
-            </v-data-table>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+            </div>
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-card-text class="">
+            <line-chart
+              :chartdata="lineChartData"
+              :options="lineChartOptions"
+            />
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="12" sm="12" md="3" align-self="center">
+        <v-row>
+          <v-col cols="12">
+            <v-card color="custom__card-bg">
+              <v-card-title class="text-body-1 font-weight-light white--text">
+                Active States
+              </v-card-title>
+              <v-card-text class="text-h6">
+                <v-icon color="white" class="mr-2">mdi-map</v-icon>
+                <span class="white--text">5/36</span>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12">
+            <v-card>
+              <v-card-title class="text-body-1 font-weight-light">
+                Active Local Governments
+              </v-card-title>
+              <v-card-text class="text-h6">
+                <v-icon color="primary" class="mr-2">mdi-map-marker</v-icon>
+                <span>5/776 </span>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12">
+            <v-card>
+              <v-card-title class="text-body-1 font-weight-light">
+                Registered Users
+              </v-card-title>
+              <v-card-text class="text-h6">
+                <v-icon color="primary" class="mr-2">mdi-account</v-icon>
+                <span>150,000,000</span>
+              </v-card-text>
+            </v-card>
+          </v-col>
+          <v-col cols="12">
+            <v-card>
+              <v-card-title class="text-body-1 font-weight-light">
+                Users Online
+              </v-card-title>
+              <v-card-text class="text-h6">
+                <v-icon color="primary" class="mr-2">mdi-account-group</v-icon>
+                <span>25 </span>
+              </v-card-text>
+            </v-card>
+          </v-col>
+        </v-row>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title class="text-body-1 font-weight-bold pa-2">
+            Registered Locations
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-data-table :headers="userHeaders" :items="users" sort-by="name">
+            <template v-slot:item="{ item }">
+              <tr>
+                <td class="pa-2">
+                  <v-avatar size="50">
+                    <v-img :src="item.image"></v-img
+                  ></v-avatar>
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.phone }}</td>
+                <td>{{ item.nin }}</td>
+                <td>{{ item.state }}</td>
+                <td>{{ item.lga }}</td>
+                <td>{{ item.address }}</td>
+                <td>
+                  <div>{{ item.coordinates.lat.toPrecision(5) }},</div>
+                  <div>{{ item.coordinates.lng.toPrecision(5) }}</div>
+                </td>
+                <td>
+                  {{
+                    new Date(item.createdAt).toLocaleString("en-GB", {
+                      hour12: true,
+                    })
+                  }}
+                </td>
+                <td>
+                  <v-btn icon @click="viewUser(item)">
+                    <v-icon color="blue" class="mr-2"> mdi-eye </v-icon>
+                  </v-btn>
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 

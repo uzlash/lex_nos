@@ -1,227 +1,225 @@
 <template>
-  <div class="grey lighten-4" style="height: 100vh">
-    <v-container>
-      <v-row>
-        <v-col cols="12">
-          <v-card>
-            <v-card-title class="text-body-1 font-weight-bold pa-2">
-              User Management
-            </v-card-title>
-            <v-divider></v-divider>
-            <v-data-table :headers="userHeaders" :items="users" sort-by="name">
-              <template v-slot:item="{ item }">
-                <tr>
-                  <td class="pa-2">
-                    <v-avatar size="50">
-                      <v-img
-                        src="https://www.vhv.rs/dpng/d/505-5058560_person-placeholder-image-free-hd-png-download.png"
-                      ></v-img
-                    ></v-avatar>
-                  </td>
-                  <td>{{ item.name }}</td>
-                  <td>{{ item.phone }}</td>
-                  <td>{{ item.email }}</td>
-                  <td>{{ item.status }}</td>
-                  <td>
-                    {{
-                      new Date(item.createdAt).toLocaleString("en-GB", {
-                        hour12: true,
-                      })
-                    }}
-                  </td>
-                  <td>
-                    <v-icon
-                      color="#00a368"
-                      class="mr-2"
-                      @click="updateAdminDialog(item)"
-                    >
-                      mdi-pencil
-                    </v-icon>
-                    <v-icon color="red" @click="deleteAdminDialog(item)">
-                      mdi-delete
-                    </v-icon>
-                  </td>
-                </tr>
-              </template>
-            </v-data-table>
-            <!-- Dialog Add -->
-            <v-dialog v-model="dialogAdd" max-width="800px">
-              <template v-slot:activator="{ on, attrs }">
-                <v-btn
-                  color="primary"
-                  dark
-                  fab
-                  class="mb-2 custom__btn"
-                  v-bind="attrs"
-                  v-on="on"
-                >
-                  Add
+  <div class="grey lighten-4 pa-4" style="height: 100vh">
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-title class="text-body-1 font-weight-bold pa-2">
+            User Management
+          </v-card-title>
+          <v-divider></v-divider>
+          <v-data-table :headers="userHeaders" :items="users" sort-by="name">
+            <template v-slot:item="{ item }">
+              <tr>
+                <td class="pa-2">
+                  <v-avatar size="50">
+                    <v-img
+                      src="https://www.vhv.rs/dpng/d/505-5058560_person-placeholder-image-free-hd-png-download.png"
+                    ></v-img
+                  ></v-avatar>
+                </td>
+                <td>{{ item.name }}</td>
+                <td>{{ item.phone }}</td>
+                <td>{{ item.email }}</td>
+                <td>{{ item.status }}</td>
+                <td>
+                  {{
+                    new Date(item.createdAt).toLocaleString("en-GB", {
+                      hour12: true,
+                    })
+                  }}
+                </td>
+                <td>
+                  <v-icon
+                    color="#00a368"
+                    class="mr-2"
+                    @click="updateAdminDialog(item)"
+                  >
+                    mdi-pencil
+                  </v-icon>
+                  <v-icon color="red" @click="deleteAdminDialog(item)">
+                    mdi-delete
+                  </v-icon>
+                </td>
+              </tr>
+            </template>
+          </v-data-table>
+          <!-- Dialog Add -->
+          <v-dialog v-model="dialogAdd" max-width="800px">
+            <template v-slot:activator="{ on, attrs }">
+              <v-btn
+                color="primary"
+                dark
+                fab
+                class="mb-2 custom__btn"
+                v-bind="attrs"
+                v-on="on"
+              >
+                Add
+              </v-btn>
+            </template>
+            <v-card>
+              <v-card-title class="font-weight-light"
+                >Add New Admin</v-card-title
+              >
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="text"
+                        prepend-icon="mdi-account"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="newAdmin.name"
+                        label="Fullname"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="text"
+                        prepend-icon="mdi-phone"
+                        hide-details
+                        color="Phone"
+                        solo
+                        v-model="newAdmin.phone"
+                        label="Phone"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="email"
+                        prepend-icon="mdi-email"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="newAdmin.email"
+                        label="Email"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="password"
+                        prepend-icon="mdi-lock"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="newAdmin.newPassword"
+                        label="New Password"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="password"
+                        prepend-icon="mdi-lock"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="newAdmin.confirmPassword"
+                        label="Confirm Password"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red" text @click="dialogAdd = false">
+                  Cancel
                 </v-btn>
-              </template>
-              <v-card>
-                <v-card-title class="font-weight-light"
-                  >Add New Admin</v-card-title
+                <v-btn color="primary" text @click="addAdmin()"> Add </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- Dialog Edit -->
+          <v-dialog v-model="dialogEdit" max-width="800px">
+            <v-card>
+              <v-card-title class="font-weight-light"
+                >Edit Password</v-card-title
+              >
+              <v-card-text>
+                <v-container>
+                  <v-row>
+                    <v-col cols="12">
+                      <v-text-field
+                        prepend-icon="mdi-account"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="editAdmin.name"
+                        label="Name"
+                        disabled
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="password"
+                        prepend-icon="mdi-lock"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="editAdmin.oldPassword"
+                        label="Old Password"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="password"
+                        prepend-icon="mdi-lock"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="editAdmin.newPassword"
+                        label="New Password"
+                      ></v-text-field>
+                    </v-col>
+                    <v-col cols="12">
+                      <v-text-field
+                        type="password"
+                        prepend-icon="mdi-lock"
+                        hide-details
+                        color="primary"
+                        solo
+                        v-model="editAdmin.confirmPassword"
+                        label="Confirm Password"
+                      ></v-text-field>
+                    </v-col>
+                  </v-row>
+                </v-container>
+              </v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red" text @click="dialogEdit = false">
+                  Cancel
+                </v-btn>
+                <v-btn color="primary" text @click="updateAdminPassword()">
+                  Update
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+          <!-- Dialog Delete -->
+          <v-dialog v-model="dialogDelete" max-width="600px">
+            <v-card>
+              <v-card-title class="font-weight-light"
+                >Are you sure you want to delete
+                {{ deleteAdmin.name }}?</v-card-title
+              >
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn color="red" text @click="dialogDelete = false"
+                  >Cancel</v-btn
                 >
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="text"
-                          prepend-icon="mdi-account"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="newAdmin.name"
-                          label="Fullname"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="text"
-                          prepend-icon="mdi-phone"
-                          hide-details
-                          color="Phone"
-                          solo
-                          v-model="newAdmin.phone"
-                          label="Phone"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="email"
-                          prepend-icon="mdi-email"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="newAdmin.email"
-                          label="Email"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="password"
-                          prepend-icon="mdi-lock"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="newAdmin.newPassword"
-                          label="New Password"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="password"
-                          prepend-icon="mdi-lock"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="newAdmin.confirmPassword"
-                          label="Confirm Password"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red" text @click="dialogAdd = false">
-                    Cancel
-                  </v-btn>
-                  <v-btn color="primary" text @click="addAdmin()"> Add </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <!-- Dialog Edit -->
-            <v-dialog v-model="dialogEdit" max-width="800px">
-              <v-card>
-                <v-card-title class="font-weight-light"
-                  >Edit Password</v-card-title
+                <v-btn color="primary" text @click="deleteAdminConfirm()"
+                  >OK</v-btn
                 >
-                <v-card-text>
-                  <v-container>
-                    <v-row>
-                      <v-col cols="12">
-                        <v-text-field
-                          prepend-icon="mdi-account"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="editAdmin.name"
-                          label="Name"
-                          disabled
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="password"
-                          prepend-icon="mdi-lock"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="editAdmin.oldPassword"
-                          label="Old Password"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="password"
-                          prepend-icon="mdi-lock"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="editAdmin.newPassword"
-                          label="New Password"
-                        ></v-text-field>
-                      </v-col>
-                      <v-col cols="12">
-                        <v-text-field
-                          type="password"
-                          prepend-icon="mdi-lock"
-                          hide-details
-                          color="primary"
-                          solo
-                          v-model="editAdmin.confirmPassword"
-                          label="Confirm Password"
-                        ></v-text-field>
-                      </v-col>
-                    </v-row>
-                  </v-container>
-                </v-card-text>
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red" text @click="dialogEdit = false">
-                    Cancel
-                  </v-btn>
-                  <v-btn color="primary" text @click="updateAdminPassword()">
-                    Update
-                  </v-btn>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-            <!-- Dialog Delete -->
-            <v-dialog v-model="dialogDelete" max-width="600px">
-              <v-card>
-                <v-card-title class="font-weight-light"
-                  >Are you sure you want to delete
-                  {{ deleteAdmin.name }}?</v-card-title
-                >
-                <v-card-actions>
-                  <v-spacer></v-spacer>
-                  <v-btn color="red" text @click="dialogDelete = false"
-                    >Cancel</v-btn
-                  >
-                  <v-btn color="primary" text @click="deleteAdminConfirm()"
-                    >OK</v-btn
-                  >
-                  <v-spacer></v-spacer>
-                </v-card-actions>
-              </v-card>
-            </v-dialog>
-          </v-card>
-        </v-col>
-      </v-row>
-    </v-container>
+                <v-spacer></v-spacer>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
+        </v-card>
+      </v-col>
+    </v-row>
   </div>
 </template>
 
