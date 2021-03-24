@@ -23,9 +23,7 @@ services:
       - frontnet
 
   backend:
-    #build: ./api
-    image: node:stretch-slim
-    working_dir: /app
+    image: shamskhalil/lexnos-backend:v1.0.0
     command: npm run start
     restart: always
     depends_on:
@@ -57,7 +55,7 @@ services:
     networks:
       - frontnet
     volumes:
-      - $PWD/xhardisk/storage/mongo:/data/db
+      - $PWD/storage/mongo:/data/db
     ports:
       - "27017:27017"
     environment:
@@ -76,7 +74,7 @@ services:
     networks:
       - frontnet
     volumes:
-      - $PWD/xhardisk/storage/redis:/data
+      - $PWD/storage/redis:/data
     ports:
       - "6379:6379"
 
