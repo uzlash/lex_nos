@@ -1,6 +1,6 @@
 <template>
   <div class="custom__map pa-2 white">
-    <v-map :zoom="7" :center="initialLocation">
+    <v-map :zoom="7" :center="initialLocation" style="z-index: 1">
       <v-icondefault :image-path="'/statics/leafletImages/'"></v-icondefault>
       <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
       <v-marker-cluster

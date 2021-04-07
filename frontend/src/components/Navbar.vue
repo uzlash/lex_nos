@@ -32,7 +32,7 @@
                 to="/chat"
               >
                 <v-avatar>
-                  <img src="../assets/avatar1.png" alt="alt" class="mr-2" />
+                  <img src="../assets/avatar-1.jpg" alt="alt" class="mr-2" />
                 </v-avatar>
 
                 <v-list-item-content>
@@ -72,7 +72,7 @@
                 to=""
               >
                 <v-avatar>
-                  <img src="../assets/avatar1.png" alt="alt" class="mr-2" />
+                  <img src="../assets/avatar-1.jpg" alt="alt" class="mr-2" />
                 </v-avatar>
 
                 <v-list-item-content>
@@ -91,7 +91,7 @@
           <template v-slot:activator="{ on, attrs }">
             <v-btn to="/profile" v-bind="attrs" v-on="on" rounded icon>
               <v-list-item-avatar color="grey" class="ml-4">
-                <v-img src="../assets/avatar1.png"></v-img>
+                <v-img src="../assets/avatar-1.jpg"></v-img>
               </v-list-item-avatar>
             </v-btn>
           </template>

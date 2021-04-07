@@ -78,11 +78,13 @@
     <v-row>
       <v-col cols="12">
         <v-card>
-          <v-card-title class="text-body-1 font-weight-bold pa-2">
-            Registered Locations
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-data-table :headers="userHeaders" :items="users" sort-by="name">
+          <v-data-table :headers="userHeaders" :items="centres" sort-by="name">
+            <template v-slot:top>
+              <v-toolbar flat>
+                <v-toolbar-title>Registered Locations</v-toolbar-title>
+                <v-divider class="mx-4" inset vertical></v-divider>
+              </v-toolbar>
+            </template>
             <template v-slot:item="{ item }">
               <tr>
                 <td class="pa-2">
@@ -92,13 +94,14 @@
                 </td>
                 <td>{{ item.name }}</td>
                 <td>{{ item.phone }}</td>
+                <td>{{ item.email }}</td>
                 <td>{{ item.nin }}</td>
-                <td>{{ item.state }}</td>
-                <td>{{ item.lga }}</td>
+                <td>{{ item.state.toLowerCase() }}</td>
+                <td>{{ item.lga.toLowerCase() }}</td>
                 <td>{{ item.address }}</td>
                 <td>
-                  <div>{{ item.coordinates.lat.toPrecision(5) }},</div>
-                  <div>{{ item.coordinates.lng.toPrecision(5) }}</div>
+                  <div>{{ item.latitude }},</div>
+                  <div>{{ item.longitude }}</div>
                 </td>
                 <td>
                   {{
@@ -108,9 +111,9 @@
                   }}
                 </td>
                 <td>
-                  <v-btn icon @click="viewUser(item)">
-                    <v-icon color="blue" class="mr-2"> mdi-eye </v-icon>
-                  </v-btn>
+                  <v-icon color="blue" class="mr-2" @click="viewLocation(item)">
+                    mdi-eye
+                  </v-icon>
                 </td>
               </tr>
             </template>
@@ -164,38 +167,47 @@ export default {
       { text: "Image", value: "image" },
       { text: "Full Name", value: "name", sortable: true },
       { text: "Phone", value: "phone", sortable: false },
+      { text: "Email", value: "email", sortable: false },
       { text: "Nin", value: "nin", sortable: false },
       { text: "State", value: "state" },
       { text: "LGA", value: "lga" },
       { text: "Address", value: "address" },
       { text: "Lat/Lng" },
       { text: "Date Joined", value: "createdAt" },
-      { text: "View" },
+      { text: "locate" },
     ],
-    users: [
-      {
-        id: 1,
-        image:
-          "https://avatars.githubusercontent.com/u/39749863?s=460&u=c51e45d3b1dd057366d62cc8283a20ea1e93d53c&v=4",
-        name: "Usman Murtala",
-        phone: "08069558390",
-        nin: "26349188109",
-        state: "Katsina State",
-        lga: "Danmusa",
-        address: "no 1 hussaini jalo street rigachikun, Kaduna.",
-        coordinates: {
-          lat: 9.082,
-          lng: 8.6753,
-        },
-        createdAt: Date.now(),
-      },
-    ],
+    centres: [],
   }),
-  methods: {
-    viewUser(item) {
-      console.log("Item", item);
-      this.$router.push("/view/" + item.id);
+  computed: {
+    token() {
+      return this.$store.getters.getToken;
     },
+  },
+  methods: {
+    viewLocation(item) {
+      console.log("Item", item);
+      this.$router.push("/view/" + item._id);
+    },
+    fetchCentres() {
+      fetch("https://lexnos.unicoms.ng/api/v1/centre", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": this.token,
+        },
+      })
+        .then((r) => r.json())
+        .then((response) => {
+          console.log("Response", response);
+          this.centres = response.payload;
+        })
+        .catch((error) => {
+          console.log("Error>>>", error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchCentres();
   },
 };
 </script>

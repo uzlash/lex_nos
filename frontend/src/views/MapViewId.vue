@@ -1,17 +1,18 @@
 <template>
   <div class="custom__map pa-2 white">
-    <v-map :zoom="7" :center="initialLocation">
+    <v-map :zoom="6.5" :center="initialLocation" style="z-index: 1">
       <v-icondefault :image-path="'/statics/leafletImages/'"></v-icondefault>
       <v-tilelayer url="http://{s}.tile.osm.org/{z}/{x}/{y}.png"></v-tilelayer>
-      <v-marker :lat-lng="markerLatLng"></v-marker>
-      <!-- <v-marker v-for="l in locations" :key="l.id" :lat-lng="l.latlng">
-          <v-icon
-            :icon-size="[32, 37]"
-            :icon-anchor="[16, 37]"
-            :icon-url="l.customIcon"
-          />
-          <v-popup :content="l.latlng.toString()"></v-popup>
-        </v-marker> -->
+      <v-marker :lat-lng="markerLatLng">
+        <v-popup>
+          <div>Name: {{ centre.name }}</div>
+          <div>Phone: {{ centre.phone }}</div>
+          <div>State: {{ centre.state }}</div>
+          <div>LGA: {{ centre.lga }}</div>
+          <div>Latitude: {{ centre.latitude }}</div>
+          <div>Longitude: {{ centre.longitude }}</div>
+        </v-popup>
+      </v-marker>
     </v-map>
   </div>
 </template>
@@ -28,19 +29,22 @@ Icon.Default.mergeOptions({
 import * as Vue2Leaflet from "vue2-leaflet";
 import { latLng } from "leaflet";
 
+import { mapGetters } from "vuex";
 export default {
   components: {
     "v-map": Vue2Leaflet.LMap,
     "v-tilelayer": Vue2Leaflet.LTileLayer,
     "v-icondefault": Vue2Leaflet.LIconDefault,
     "v-marker": Vue2Leaflet.LMarker,
+    "v-popup": Vue2Leaflet.LPopup,
   },
   props: ["id"],
   data() {
     return {
+      centre: {},
       markerLatLng: {
-        lat: 9.0778,
-        lng: 8.6775,
+        lat: 0.0,
+        lng: 0.0,
       },
       clusterOptions: {},
       initialLocation: latLng(9.0778, 8.6775),
@@ -51,6 +55,10 @@ export default {
       showMap: true,
     };
   },
+  computed: mapGetters({
+    user: "getUser",
+    token: "getToken",
+  }),
   methods: {
     getObjectUsingId() {},
     zoomUpdate(zoom) {
@@ -61,6 +69,27 @@ export default {
     },
     click: (e) => console.log("clusterclick", e),
     ready: (e) => console.log("ready", e),
+    getCentre() {
+      fetch("https://lexnos.unicoms.ng/api/v1/centre/" + this.id, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": this.token,
+        },
+      })
+        .then((r) => r.json())
+        .then((response) => {
+          const marker = {
+            lat: parseFloat(response.payload.latitude),
+            lng: parseFloat(response.payload.longitude),
+          };
+          this.markerLatLng = marker;
+          this.centre = response.payload;
+        })
+        .catch((error) => {
+          console.log("Error>>>", error);
+        });
+    },
   },
   mounted() {
     setTimeout(() => {
@@ -69,6 +98,7 @@ export default {
         this.clusterOptions = { disableClusteringAtZoom: 11 };
       });
     }, 5000);
+    this.getCentre();
   },
 };
 </script>

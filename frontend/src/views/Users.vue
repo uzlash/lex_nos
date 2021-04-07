@@ -12,12 +12,10 @@
               <tr>
                 <td class="pa-2">
                   <v-avatar size="50">
-                    <v-img
-                      src="https://www.vhv.rs/dpng/d/505-5058560_person-placeholder-image-free-hd-png-download.png"
-                    ></v-img
+                    <v-img src="../assets/avatar-1.jpg"></v-img
                   ></v-avatar>
                 </td>
-                <td>{{ item.name }}</td>
+                <td>{{ item.name || item.fname }}</td>
                 <td>{{ item.phone }}</td>
                 <td>{{ item.email }}</td>
                 <td>{{ item.status }}</td>
@@ -63,63 +61,74 @@
               >
               <v-card-text>
                 <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="text"
-                        prepend-icon="mdi-account"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="newAdmin.name"
-                        label="Fullname"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="text"
-                        prepend-icon="mdi-phone"
-                        hide-details
-                        color="Phone"
-                        solo
-                        v-model="newAdmin.phone"
-                        label="Phone"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="email"
-                        prepend-icon="mdi-email"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="newAdmin.email"
-                        label="Email"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="password"
-                        prepend-icon="mdi-lock"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="newAdmin.newPassword"
-                        label="New Password"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="password"
-                        prepend-icon="mdi-lock"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="newAdmin.confirmPassword"
-                        label="Confirm Password"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
+                  <v-form @submit.prevent ref="form">
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="text"
+                          prepend-icon="mdi-account"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="newAdmin.name"
+                          label="Fullname"
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="text"
+                          prepend-icon="mdi-phone"
+                          hide-details="auto"
+                          color="Phone"
+                          solo
+                          v-model="newAdmin.phone"
+                          label="Phone"
+                          :rules="[rules.required]"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="email"
+                          prepend-icon="mdi-email"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="newAdmin.email"
+                          label="Email"
+                          :rules="[rules.required, rules.email]"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="password"
+                          prepend-icon="mdi-lock"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="newAdmin.password"
+                          label="New Password"
+                          :rules="[rules.required, rules.password]"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="password"
+                          prepend-icon="mdi-lock"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="confirmPassword"
+                          label="Confirm Password"
+                          :rules="[
+                            rules.required,
+                            rules.password,
+                            passwordConfirmationRule,
+                          ]"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
               <v-card-actions>
@@ -139,52 +148,61 @@
               >
               <v-card-text>
                 <v-container>
-                  <v-row>
-                    <v-col cols="12">
-                      <v-text-field
-                        prepend-icon="mdi-account"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="editAdmin.name"
-                        label="Name"
-                        disabled
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="password"
-                        prepend-icon="mdi-lock"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="editAdmin.oldPassword"
-                        label="Old Password"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="password"
-                        prepend-icon="mdi-lock"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="editAdmin.newPassword"
-                        label="New Password"
-                      ></v-text-field>
-                    </v-col>
-                    <v-col cols="12">
-                      <v-text-field
-                        type="password"
-                        prepend-icon="mdi-lock"
-                        hide-details
-                        color="primary"
-                        solo
-                        v-model="editAdmin.confirmPassword"
-                        label="Confirm Password"
-                      ></v-text-field>
-                    </v-col>
-                  </v-row>
+                  <v-form @submit.prevent ref="form1">
+                    <v-row>
+                      <v-col cols="12">
+                        <v-text-field
+                          prepend-icon="mdi-account"
+                          hide-details
+                          color="primary"
+                          solo
+                          v-model="editAdmin.name"
+                          label="Name"
+                          disabled
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="password"
+                          prepend-icon="mdi-lock"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="editAdmin.oldPassword"
+                          label="Old Password"
+                          :rules="[rules.required, rules.password]"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="password"
+                          prepend-icon="mdi-lock"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="editAdmin.password"
+                          label="New Password"
+                          :rules="[rules.required, rules.password]"
+                        ></v-text-field>
+                      </v-col>
+                      <v-col cols="12">
+                        <v-text-field
+                          type="password"
+                          prepend-icon="mdi-lock"
+                          hide-details="auto"
+                          color="primary"
+                          solo
+                          v-model="confirmPassword"
+                          label="Confirm Password"
+                          :rules="[
+                            rules.required,
+                            rules.password,
+                            passwordConfirmationRule,
+                          ]"
+                        ></v-text-field>
+                      </v-col>
+                    </v-row>
+                  </v-form>
                 </v-container>
               </v-card-text>
               <v-card-actions>
@@ -226,24 +244,25 @@
 <script>
 // @ is an alias to /src
 
+// import { mapGetters } from "vuex";
 export default {
-  name: "Home",
   components: {},
   data: () => ({
     dialogAdd: false,
     dialogEdit: false,
     dialogDelete: false,
+    confirmPassword: "",
     newAdmin: {
       name: "",
       phone: "",
       email: "",
-      newPassword: "",
+      password: "",
     },
     editAdmin: {
       id: "",
       name: "",
       oldPassword: "",
-      newPassword: "",
+      password: "",
     },
     deleteAdmin: {
       id: "",
@@ -258,49 +277,126 @@ export default {
       { text: "Date Joined", value: "createdAt" },
       { text: "Actions" },
     ],
-    users: [
-      {
-        id: 1,
-        image:
-          "https://avatars.githubusercontent.com/u/39749863?s=460&u=c51e45d3b1dd057366d62cc8283a20ea1e93d53c&v=4",
-        name: "Usman Murtala",
-        phone: "08069558390",
-        email: "uzlash16@gmail.com",
-        status: "Active",
-        createdAt: Date.now(),
+    users: [],
+    rules: {
+      required: (v) => !!v || "Field is required",
+      counter: (v) => (v && v.length >= 3) || "Minimum length is 3 characters",
+      maxChar: (v) => (v && v.length <= 11) || "Max 11 characters",
+      email: (value) => {
+        const pattern = /^(([^<>()[\]\\.,;:\s@"]+(\.[^<>()[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return pattern.test(value) || "Invalid e-mail.";
       },
-    ],
+      password: (value) =>
+        (value && value.length >= 6) || "Minimum length is 6 characters",
+    },
   }),
+  computed: {
+    token() {
+      return this.$store.getters.getToken;
+    },
+    passwordConfirmationRule() {
+      return () =>
+        (this.newAdmin.password || this.editAdmin.password) ===
+          this.confirmPassword || "Password must match";
+    },
+  },
+
   methods: {
     addAdmin() {
-      console.log("New Admin", this.newAdmin);
+      if (this.$refs.form.validate()) {
+        fetch("https://lexnos.unicoms.ng/api/v1/user", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "x-token": this.token,
+          },
+          body: JSON.stringify(this.newAdmin),
+        })
+          .then((r) => r.json())
+          .then((response) => {
+            console.log("Response", response);
+            this.fetchUsers();
+            this.dialogAdd = false;
+            // this.centres = response.payload;
+          })
+          .catch((error) => {
+            console.log("Error>>>", error);
+          });
+      }
     },
     updateAdminDialog(data) {
-      this.editAdmin.id = data.id;
+      this.editAdmin.id = data._id;
       this.editAdmin.name = data.name;
       this.dialogEdit = true;
+      console.log(data);
     },
     updateAdminPassword() {
-      console.log("Edit Admin", this.editAdmin);
+      if (this.$refs.form1.validate()) {
+        console.log("Edit Admin", this.editAdmin);
+        fetch("https://lexnos.unicoms.ng/api/v1/user/" + this.editAdmin.id, {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+            "x-token": this.token,
+          },
+          body: JSON.stringify(this.editAdmin),
+        })
+          .then((r) => r.json())
+          .then((response) => {
+            console.log("Response", response);
+            this.fetchUsers();
+            this.dialogEdit = false;
+          })
+          .catch((error) => {
+            console.log("Error>>>", error);
+          });
+      }
     },
     deleteAdminDialog(data) {
-      this.deleteAdmin.id = data.id;
+      this.deleteAdmin.id = data._id;
       this.deleteAdmin.name = data.name;
       this.dialogDelete = true;
       console.log("Delete Admin", data);
     },
     deleteAdminConfirm() {
-      console.log("Deleted Admin", this.deleteAdmin);
+      // console.log("Deleted Admin", this.deleteAdmin);
+      fetch("https://lexnos.unicoms.ng/api/v1/user/" + this.deleteAdmin.id, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": this.token,
+        },
+      })
+        .then((r) => r.json())
+        .then((response) => {
+          console.log("Response", response);
+          this.fetchUsers();
+          this.dialogDelete = false;
+        })
+        .catch((error) => {
+          console.log("Error>>>", error);
+        });
     },
-    // viewUser(data) {
-    //   console.log("View User Data", data);
-    // },
-    // editUser(data) {
-    //   console.log("Edit User", data);
-    // },
-    // deleteUser(data) {
-    //   console.log("Delete User", data);
-    // },
+    fetchUsers() {
+      fetch("https://lexnos.unicoms.ng/api/v1/user", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": this.token,
+        },
+      })
+        .then((r) => r.json())
+        .then((response) => {
+          console.log("Response", response);
+          this.users = response.payload;
+        })
+        .catch((error) => {
+          console.log("Error>>>", error);
+        });
+    },
+  },
+  mounted() {
+    this.fetchUsers();
   },
 };
 </script>

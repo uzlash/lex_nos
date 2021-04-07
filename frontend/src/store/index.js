@@ -17,6 +17,10 @@ export default new Vuex.Store({
       signInSuccessPayload: null,
     },
   },
+  getters: {
+    getUser: (state) => state.user,
+    getToken: (state) => state.token,
+  },
   mutations: {
     loginUser(state, userData) {
       state.token = userData.token
@@ -44,7 +48,7 @@ export default new Vuex.Store({
   actions: {
     SIGN_IN({ commit }, authData) {
       commit('startLoader')
-      fetch('https://api.narr.ng' + '/api/v1/auth/login', {
+      fetch('https://lexnos.unicoms.ng' + '/api/v1/auth/login', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
