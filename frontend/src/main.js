@@ -6,7 +6,7 @@ import vuetify from './plugins/vuetify';
 import io from 'socket.io-client'
 import VueSocketIOExt from 'vue-socket.io-extended'
 
-const socket = io('https://lexnos.unicoms.ng')
+const socket = io('https://api.narr.ng')
 
 Vue.use(VueSocketIOExt, socket, { store })
 

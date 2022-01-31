@@ -5,8 +5,10 @@
       <v-app-bar-nav-icon
         dark
         small
+        tile
         @click="drawer = !drawer"
-        class="primary pa-5"
+        class="secondary pa-1 mx-1"
+        style="border-radius: 10%"
       ></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
       <div>
@@ -99,19 +101,21 @@
         </v-tooltip>
       </div>
     </v-app-bar>
-    <v-navigation-drawer v-model="drawer" dark app color="primary">
+    <v-navigation-drawer
+      v-model="drawer"
+      dark
+      app
+      color="secondary"
+      mini-variant
+      mini-variant-width="150"
+    >
       <v-layout column align-center>
-        <v-flex class="mt-6 mb-4">
-          <!-- <v-img
-            height="150"
-            width="200"
-            src="../assets/lex_logo1.jpg"
-            alt="Lex Logo"
-          ></v-img> -->
-          <span class="text-h6 font-weight-light white--text"
-            >Lex<span class="black--text font-weight-bold">NOS</span>
-            Dashboard</span
-          >
+        <v-flex class="mt-6 mb-4 d-flex align-center">
+          <div class="text-center">
+            <v-avatar size="75">
+              <img src="../assets/nafisatu.png" alt="Logo" />
+            </v-avatar>
+          </div>
         </v-flex>
       </v-layout>
       <v-divider></v-divider>
@@ -122,19 +126,49 @@
           :key="link.icon"
           :to="link.route"
         >
-          <v-list-item-action>
+          <!-- <v-list-item-action>
             <v-icon>{{ link.icon }}</v-icon>
-          </v-list-item-action>
+          </v-list-item-action> -->
           <v-list-item-content>
-            <v-list-item-title>{{ link.text }}</v-list-item-title>
+            <v-icon>{{ link.icon }}</v-icon>
+            <v-list-item-subtitle align="center">{{
+              link.text
+            }}</v-list-item-subtitle>
           </v-list-item-content>
         </v-list-item>
       </v-list>
+      <!-- <div class="d-flex justify-center mb-2">
+        <v-btn outlined small dark color="white" class="py-4 text-capitalize">
+          <span>Download <br> Form</span>
+        </v-btn>
+      </div> -->
+      <!-- <v-list-group sub-group color="white" class="ml-n4">
+        <template v-slot:activator>
+          <v-list-item-content>
+            <v-list-item-title class="ml-4"
+              >Notification Centre</v-list-item-title
+            >
+          </v-list-item-content>
+        </template>
+
+        <v-list-item
+          v-for="(element, index) in notifications"
+          :key="index"
+          :to="element.route"
+          color="white"
+          active-class="border"
+        >
+          <v-list-item-icon>
+            <v-icon>{{ element.icon }}</v-icon>
+          </v-list-item-icon>
+          <v-list-item-title>{{ element.text }}</v-list-item-title>
+        </v-list-item>
+      </v-list-group> -->
       <v-divider></v-divider>
 
       <template v-slot:append>
         <div class="pa-2 d-flex justify-center">
-          <v-btn outlined dark color="white" @click="logOut()">
+          <v-btn outlined dark small color="white" @click="logOut()">
             <span>Logout</span>
             <v-icon>mdi-exit-to-app</v-icon>
           </v-btn>
@@ -151,13 +185,26 @@ export default {
     drawer: true,
     links: [
       { icon: "mdi-chart-box-outline", text: "Dashboard", route: "/" },
+      { icon: "mdi-form-select", text: "Application form", route: "/form" },
+      { icon: "mdi-desktop-mac-dashboard", text: "Admin Dashboard", route: "/admin" },
       { icon: "mdi-account", text: "User Management", route: "/user" },
-      { icon: "mdi-map", text: "Registered Centres", route: "/centre" },
-      {
-        icon: "mdi-map-outline",
-        text: "Centre Manager",
-        route: "/centremanager",
-      },
+      // {
+      //   icon: "mdi-map-outline",
+      //   text: "Centre Manager",
+      //   route: "/centremanager",
+      // },
+    ],
+    notifications: [
+      // {
+      //   icon: "mdi-inbox-arrow-down",
+      //   text: "Inbox",
+      //   route: "/notificationinbox",
+      // },
+      // {
+      //   icon: "mdi-inbox-arrow-up",
+      //   text: "Outbox",
+      //   route: "/notificationoutbox",
+      // },
     ],
 
     messages: [
@@ -188,7 +235,7 @@ export default {
 
 <style scoped>
 .border {
-  border-left: 4px solid white;
+  border-left: 4px solid #c2185b;
 }
 ::-webkit-scrollbar {
   width: 10px;

@@ -1,168 +1,156 @@
 <template>
-  <div class="grey lighten-4 pa-4" style="height: 100vh">
-    <v-row>
-      <!-- Line Chart -->
-      <v-col cols="12" sm="12" md="9">
-        <v-card outlined tile class="custom__card">
-          <v-card-title class="pa-2">
-            <div class="d-flex align-center">
-              <span class="lstick ml-n2 red"></span>
-              <div class="ml-4 mr-1">
-                <h5 class="subtitle-1">Registrations over time</h5>
-                <h2
-                  class="font-weight-regular body-2 grey--text text--darken-2"
-                >
-                  Year 2021
-                </h2>
-              </div>
+  <div class="grey lighten-4 pa-4" style="min-height: 100vh">
+    <v-container fluid>
+      <v-row>
+        <v-col cols="9">
+          <v-card flat>
+            <v-card-title>
+              Instructions for Application process, please read carefully.
+            </v-card-title>
+            <v-card-text>
+              <ol>
+                <li>
+                  Please start making payment by clicking the make payment
+                  button below.
+                </li>
+                <li>
+                  Registration Fees is
+                  <span class="success--text">N10,000</span>. click the button
+                  down below and pay with your card.
+                </li>
+                <div>
+                  <paystack
+                    :amount="amount * 100"
+                    :email="email"
+                    :paystackkey="paystackkey"
+                    :reference="reference"
+                    :callback="callback"
+                    :close="close"
+                    :embed="false"
+                    class="
+                      white--text
+                      success
+                      text-capitalize
+                      v-btn v-btn--contained
+                      theme--light
+                      v-size--small
+                      v-btn--is-elevated
+                      my-2
+                    "
+                  >
+                    Make Payment
+                    <v-icon color="white">mdi-cash</v-icon>
+                  </paystack>
+                </div>
+                <li>
+                  After payment have been successfully approved and verified,
+                  the application card will be enabled and you can then proceed
+                  by filling the personal information form.
+                </li>
+                <li>
+                  After filling the personal information section, click on next
+                  and tick "i agree" on the declaration of student section.
+                </li>
+                <li>
+                  Download the guarantor form below, fill it and bring it to the
+                  registration point when you have been admitted.
+                </li>
+                <div>
+                  <v-btn color="secondary" small class="my-2 text-capitalize">
+                    Download guarantor form
+                    <v-icon color="white" small>mdi-download</v-icon>
+                  </v-btn>
+                </div>
+              </ol>
+            </v-card-text>
+          </v-card>
+        </v-col>
+        <v-col cols="3">
+          <v-card class="text-center mt-14 white">
+            <div>
+              <v-avatar size="75" class="mt-n10 white">
+                <img src="../assets/avatar-2.png" alt="Logo" />
+              </v-avatar>
             </div>
-          </v-card-title>
-          <v-divider></v-divider>
-          <v-card-text class="">
-            <line-chart
-              :chartdata="lineChartData"
-              :options="lineChartOptions"
-            />
-          </v-card-text>
-        </v-card>
-      </v-col>
-      <v-col cols="12" sm="12" md="3" align-self="center">
-        <v-row>
-          <v-col cols="12">
-            <v-card color="custom__card-bg">
-              <v-card-title class="text-body-1 font-weight-light white--text">
-                Active States
-              </v-card-title>
-              <v-card-text class="text-h6">
-                <v-icon color="white" class="mr-2">mdi-map</v-icon>
-                <span class="white--text">5/36</span>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12">
-            <v-card>
-              <v-card-title class="text-body-1 font-weight-light">
-                Active Local Governments
-              </v-card-title>
-              <v-card-text class="text-h6">
-                <v-icon color="primary" class="mr-2">mdi-map-marker</v-icon>
-                <span>5/776 </span>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12">
-            <v-card>
-              <v-card-title class="text-body-1 font-weight-light">
-                Registered Users
-              </v-card-title>
-              <v-card-text class="text-h6">
-                <v-icon color="primary" class="mr-2">mdi-account</v-icon>
-                <span>150,000,000</span>
-              </v-card-text>
-            </v-card>
-          </v-col>
-          <v-col cols="12">
-            <v-card>
-              <v-card-title class="text-body-1 font-weight-light">
-                Users Online
-              </v-card-title>
-              <v-card-text class="text-h6">
-                <v-icon color="primary" class="mr-2">mdi-account-group</v-icon>
-                <span>25 </span>
-              </v-card-text>
-            </v-card>
-          </v-col>
-        </v-row>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card>
-          <v-data-table :headers="userHeaders" :items="centres" sort-by="name">
-            <template v-slot:top>
-              <v-toolbar flat>
-                <v-toolbar-title>Registered Locations</v-toolbar-title>
-                <v-divider class="mx-4" inset vertical></v-divider>
-              </v-toolbar>
-            </template>
-            <template v-slot:item="{ item }">
-              <tr>
-                <td class="pa-2">
-                  <v-avatar size="50">
-                    <v-img :src="item.image"></v-img
-                  ></v-avatar>
-                </td>
-                <td>{{ item.name }}</td>
-                <td>{{ item.phone }}</td>
-                <td>{{ item.email }}</td>
-                <td>{{ item.nin }}</td>
-                <td>{{ item.state.toLowerCase() }}</td>
-                <td>{{ item.lga.toLowerCase() }}</td>
-                <td>{{ item.address }}</td>
-                <td>
-                  <div>{{ item.latitude }},</div>
-                  <div>{{ item.longitude }}</div>
-                </td>
-                <td>
-                  {{
-                    new Date(item.createdAt).toLocaleString("en-GB", {
-                      hour12: true,
-                    })
-                  }}
-                </td>
-                <td>
-                  <v-icon color="blue" class="mr-2" @click="viewLocation(item)">
-                    mdi-eye
-                  </v-icon>
-                </td>
-              </tr>
-            </template>
-          </v-data-table>
-        </v-card>
-      </v-col>
-    </v-row>
+            <v-card-title class="row justify-center">Jane Doe</v-card-title>
+            <v-card-subtitle class="text-center py-0"
+              >janedoe@gmail.com</v-card-subtitle
+            >
+            <v-card-subtitle class="text-center py-0 font-weight-bold"
+              >Payment Status:
+              <span class="secondary--text mr-2">Pending</span>
+              <v-icon size="20" color="secondary">mdi-progress-clock</v-icon>
+            </v-card-subtitle>
+            <v-card-subtitle class="text-center pt-0 font-weight-bold"
+              >Admission Status:
+              <span class="secondary--text mr-2">Pending</span>
+              <v-icon size="20" color="secondary">mdi-progress-clock</v-icon>
+            </v-card-subtitle>
+          </v-card>
+          <!-- <div class="mt-4">
+            <v-date-picker
+              color="secondary"
+              full-width
+              v-model="datepicker"
+            ></v-date-picker>
+          </div> -->
+        </v-col>
+      </v-row>
+      <v-row>
+        <!-- <v-col cols="3">
+          <v-card class="text-center mt-14 white">
+            <div>
+              <v-avatar size="75" class="mt-n10 white">
+                <img src="../assets/avatar-2.png" alt="Logo" />
+              </v-avatar>
+            </div>
+            <v-card-title class="row justify-center"
+              >Jane Doe</v-card-title
+            >
+            <v-card-subtitle class="text-center py-0"
+              >janedoe@gmail.com</v-card-subtitle
+            >
+            <v-card-subtitle
+              class="text-center pt-0 font-weight-bold"
+              >Payment Status:
+              <span class="secondary--text mr-2">Pending</span>
+              <v-icon size="20" color="secondary">mdi-progress-clock</v-icon>
+            </v-card-subtitle>
+          </v-card>
+          <div class="mt-4">
+            <v-date-picker
+              color="secondary"
+              full-width
+              v-model="datepicker"
+            ></v-date-picker>
+          </div>
+        </v-col> -->
+      </v-row>
+    </v-container>
   </div>
 </template>
 
 <script>
 // @ is an alias to /src
 
-import LineChart from "../components/LineChart.vue";
+import paystack from "vue-paystack";
+// import LineChart from "../components/LineChart.vue";
 export default {
   name: "Home",
   components: {
-    LineChart,
+    // LineChart,
+    paystack,
   },
   data: () => ({
-    lineChartData: {
-      labels: [
-        "January",
-        "February",
-        "March",
-        "April",
-        "May",
-        "June",
-        "July",
-        "August",
-        "September",
-        "October",
-        "November",
-        "December",
-      ],
-      datasets: [
-        {
-          label: "No of Registrations",
-          borderColor: "#3498db",
-          backgroundColor: "#3498db",
-          data: [0, 150, 110, 240, 200, 200, 300, 200, 380, 300, 400, 380],
-        },
-      ],
-    },
-    lineChartOptions: {
-      responsive: true,
-      maintainAspectRatio: false,
-      fill: true,
-    },
+    checkbox: false,
+    row: null,
+    selectedSource: [],
+    datepicker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
+      .toISOString()
+      .substr(0, 10),
+    image: null,
+    imageUrlPreview: require("../assets/avatar-2.png"),
+    formStepper: 1,
     userHeaders: [
       { text: "Image", value: "image" },
       { text: "Full Name", value: "name", sortable: true },
@@ -176,17 +164,35 @@ export default {
       { text: "Date Joined", value: "createdAt" },
       { text: "locate" },
     ],
-    centres: [],
+    paystackkey: "pk_test_225a9f8342058f3c6781f3a3c29c4c74a357348f", //paystack public key
+    email: "foobar@example.com", // Customer email
+    amount: 10000, // in kobo
+    userPaid: false,
+    // disabledCard: true,
+    paymentMade: false,
   }),
   computed: {
     token() {
       return this.$store.getters.getToken;
+    },
+    reference() {
+      let text = "";
+      let possible =
+        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
+
+      for (let i = 0; i < 10; i++)
+        text += possible.charAt(Math.floor(Math.random() * possible.length));
+
+      return text;
     },
   },
   methods: {
     viewLocation(item) {
       console.log("Item", item);
       this.$router.push("/view/" + item._id);
+    },
+    Preview_image() {
+      this.imageUrlPreview = URL.createObjectURL(this.image);
     },
     fetchCentres() {
       fetch("https://lexnos.unicoms.ng/api/v1/centre", {
@@ -204,6 +210,12 @@ export default {
         .catch((error) => {
           console.log("Error>>>", error);
         });
+    },
+    callback: function (response) {
+      console.log(response);
+    },
+    close: function () {
+      console.log("Payment closed");
     },
   },
   mounted() {

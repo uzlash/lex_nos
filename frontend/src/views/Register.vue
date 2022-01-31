@@ -19,16 +19,26 @@
             </span>
           </h2>
           <h6 class="text-center secondary--text text-body-2 font-weight-bold">
-            Welcome Back, Please Login...
+            Welcome New User, Register here
           </h6>
           <v-card-text class="pb-0">
             <v-form @submit.prevent ref="form">
               <v-row justify="center">
                 <v-col cols="12" md="12">
                   <v-text-field
+                  v-model="fullName"
+                    hide-details="auto"
+                    label="Full Name"
+                    name="Fullname"
+                    type="text"
+                    color="secondary"
+                    :rules="[rules.required]"
+                  />
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-text-field
                     hide-details="auto"
                     v-model="email"
-                    class="mt-4"
                     label="Email"
                     name="Email"
                     type="text"
@@ -38,11 +48,22 @@
                 </v-col>
                 <v-col cols="12" md="12">
                   <v-text-field
+                  v-model="phone"
+                    hide-details="auto"
+                    label="Phone"
+                    name="Phone"
+                    type="text"
+                    color="secondary"
+                    :rules="[rules.required]"
+                  />
+                </v-col>
+                <v-col cols="12" md="12">
+                  <v-text-field
                     hide-details="auto"
                     v-model="password"
                     :append-icon="showPassword ? 'mdi-eye' : 'mdi-eye-off'"
                     :type="showPassword ? 'text' : 'password'"
-                    label="Password"
+                    label="Choose Password"
                     name="password"
                     color="secondary"
                     @click:append="showPassword = !showPassword"
@@ -53,7 +74,7 @@
             </v-form>
             <div class="text-center mt-3">
               <v-btn
-                @click="signIn()"
+                @click="register()"
                 :loading="signInMetaData.signInLoading"
                 :disabled="signInMetaData.signInDisabled"
                 block
@@ -64,19 +85,19 @@
                   mt-10
                   custom__gradient-button
                 "
-                >Sign In</v-btn
+                >Register</v-btn
               >
             </div>
             <div class="text-center mt-2">
               <span class="black--text text-body-2"
-                >New User?
+                >Already have an account?
                 <v-btn
                   small
                   text
                   color="secondary"
                   class="text-capitalize"
-                  @click="goRegister()"
-                  >Register Here</v-btn
+                  @click="goLogin()"
+                  >Login Here</v-btn
                 ></span
               >
             </div>
@@ -98,7 +119,9 @@
 <script>
 export default {
   data: () => ({
+    fullName: "",
     email: "",
+    phone: "",
     password: "",
     showPassword: "",
     loading: false,
@@ -116,17 +139,19 @@ export default {
     },
   }),
   methods: {
-    signIn() {
-      const signInData = {
+    register() {
+      const registerData = {
+        fullName: this.fullName,
         email: this.email,
         password: this.password,
+        phone: this.phone
       };
       if (this.$refs.form.validate()) {
-        this.$store.dispatch("SIGN_IN", signInData);
+        this.$store.dispatch("SIGN_UP", registerData);
       }
     },
-    goRegister() {
-      this.$router.push("/register");
+    goLogin() {
+      this.$router.push("/login");
     },
   },
   computed: {

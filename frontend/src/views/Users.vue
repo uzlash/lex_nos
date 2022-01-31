@@ -45,7 +45,7 @@
           <v-dialog v-model="dialogAdd" max-width="800px">
             <template v-slot:activator="{ on, attrs }">
               <v-btn
-                color="primary"
+                color="secondary"
                 dark
                 fab
                 class="mb-2 custom__btn"

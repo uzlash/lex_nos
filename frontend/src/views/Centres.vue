@@ -8,17 +8,26 @@
         @clusterclick="click()"
         @ready="ready"
       >
-        <v-marker
+        <!-- <v-marker
           v-for="(l, index) in markers"
           :key="index"
           :lat-lng="l.latlng"
         >
-          <!-- <v-icon
-            :icon-size="[32, 37]"
-            :icon-anchor="[16, 37]"
-            :icon-url="iconUrl"
-          /> -->
           <v-popup :content="l.text"></v-popup>
+        </v-marker> -->
+        <v-marker
+          v-for="centre in centres"
+          :key="centre._id"
+          :lat-lng="[parseFloat(centre.latitude), parseFloat(centre.longitude)]"
+        >
+          <v-popup>
+            <div>Name: {{ centre.name }}</div>
+            <div>Phone: {{ centre.phone }}</div>
+            <div>State: {{ centre.state }}</div>
+            <div>LGA: {{ centre.lga }}</div>
+            <div>Latitude: {{ centre.latitude }}</div>
+            <div>Longitude: {{ centre.longitude }}</div>
+          </v-popup>
         </v-marker>
       </v-marker-cluster>
     </v-map>
@@ -26,6 +35,7 @@
 </template>
 
 <script>
+import { mapGetters } from "vuex";
 // Code to fix markers not working -- don't remove
 import { Icon } from "leaflet";
 
@@ -53,53 +63,7 @@ export default {
   props: ["id"],
   data() {
     return {
-      markers: [
-        {
-          id: 1,
-          latlng: [13.346865014577924, 5.888671875],
-          text: "Sokoto 1",
-        },
-        {
-          id: 1,
-          latlng: [13.261333170798274, 5.42724609375],
-          text: "Sokoto 2",
-        },
-        {
-          id: 1,
-          latlng: [12.768946439455956, 5.20751953125],
-          text: "Sokoto 3",
-        },
-        {
-          id: 1,
-          latlng: [12.897489183755892, 7.6025390625],
-          text: "Katsina 1",
-        },
-        {
-          id: 1,
-          latlng: [12.361465967347373, 7.55859375],
-          text: "Katsina 2",
-        },
-        {
-          id: 1,
-          latlng: [11.910353555774101, 7.580566406250001],
-          text: "Katsina 3",
-        },
-        {
-          id: 1,
-          latlng: [11.781325296112277, 14.2822265625],
-          text: "Borno 1",
-        },
-        {
-          id: 1,
-          latlng: [12.64033830684679, 13.645019531249998],
-          text: "Borno 2",
-        },
-        {
-          id: 1,
-          latlng: [11.845847044118496, 13.11767578125],
-          text: "Borno 3",
-        },
-      ],
+      centres: [],
       // icon: customicon,
       clusterOptions: {},
       initialLocation: latLng(9.0778, 8.6775),
@@ -110,6 +74,10 @@ export default {
       showMap: true,
     };
   },
+  computed: mapGetters({
+    user: "getUser",
+    token: "getToken",
+  }),
   methods: {
     getObjectUsingId() {},
     zoomUpdate(zoom) {
@@ -120,6 +88,23 @@ export default {
     },
     click: (e) => console.log("clusterclick", e),
     ready: (e) => console.log("ready", e),
+    fetchCentres() {
+      fetch("https://lexnos.unicoms.ng/api/v1/centre", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": this.token,
+        },
+      })
+        .then((r) => r.json())
+        .then((response) => {
+          console.log("Response", response);
+          this.centres = response.payload;
+        })
+        .catch((error) => {
+          console.log("Error>>>", error);
+        });
+    },
   },
   mounted() {
     setTimeout(() => {
@@ -128,6 +113,7 @@ export default {
         this.clusterOptions = { disableClusteringAtZoom: 11 };
       });
     }, 5000);
+    this.fetchCentres();
   },
 };
 </script>
