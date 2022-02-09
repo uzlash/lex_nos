@@ -72,18 +72,18 @@
                 <img src="../assets/avatar-2.png" alt="Logo" />
               </v-avatar>
             </div>
-            <v-card-title class="row justify-center">Jane Doe</v-card-title>
+            <v-card-title class="row justify-center">{{user.fullName}}</v-card-title>
             <v-card-subtitle class="text-center py-0"
-              >janedoe@gmail.com</v-card-subtitle
+              >{{user.email}}</v-card-subtitle
             >
             <v-card-subtitle class="text-center py-0 font-weight-bold"
               >Payment Status:
-              <span class="secondary--text mr-2">Pending</span>
+              <span class="secondary--text mr-2">{{user.isPayment}}</span>
               <v-icon size="20" color="secondary">mdi-progress-clock</v-icon>
             </v-card-subtitle>
             <v-card-subtitle class="text-center pt-0 font-weight-bold"
               >Admission Status:
-              <span class="secondary--text mr-2">Pending</span>
+              <span class="secondary--text mr-2">...</span>
               <v-icon size="20" color="secondary">mdi-progress-clock</v-icon>
             </v-card-subtitle>
           </v-card>
@@ -175,6 +175,9 @@ export default {
     token() {
       return this.$store.getters.getToken;
     },
+    user() {
+      return this.$store.getters.getUser;
+    },
     reference() {
       let text = "";
       let possible =
@@ -212,7 +215,21 @@ export default {
         });
     },
     callback: function (response) {
-      console.log(response);
+      console.log(response.reference);
+      fetch(`http://18.222.126.74/api/paystack/verify/${response.reference}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "x-token": this.token,
+        },
+      })
+        .then((r) => r.json())
+        .then((response) => {
+          console.log("Response", response);
+        })
+        .catch((error) => {
+          console.log("Error>>>", error);
+        });
     },
     close: function () {
       console.log("Payment closed");

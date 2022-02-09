@@ -3,7 +3,11 @@
     <v-container fluid>
       <v-row>
         <v-col cols="12">
-          <v-card :disabled="disabled" class="mt-4">
+          <v-card
+            v-if="user.isPayment == true"
+            :disabled="disabled"
+            class="mt-4"
+          >
             <v-card-title class="">Application Form </v-card-title>
             <v-divider></v-divider>
             <v-stepper v-model="formStepper">
@@ -15,19 +19,7 @@
                 >
                   Personal Information
                 </v-stepper-step>
-
                 <v-divider></v-divider>
-
-                <!-- <v-stepper-step
-                  color="secondary"
-                  :complete="formStepper > 2"
-                  step="2"
-                >
-                  Parent's/Guardian Undertaking
-                </v-stepper-step>
-
-                <v-divider></v-divider> -->
-
                 <v-stepper-step color="secondary" step="2">
                   Declaration by Student
                 </v-stepper-step>
@@ -43,12 +35,13 @@
                         label="Name of Applicant"
                         type="text"
                         color="primary"
+                        v-model="fullName"
                       />
                     </v-col>
                   </v-row>
                   <v-row dense>
                     <v-col cols="6">
-                      <v-radio-group v-model="row" row>
+                      <v-radio-group v-model="program" row>
                         <v-radio
                           label="Basic Nursing"
                           value="nursing"
@@ -69,7 +62,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Friends"
                         value="friends"
                         hide-details="auto"
@@ -77,7 +70,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Relatives"
                         value="relatives"
                         hide-details="auto"
@@ -85,7 +78,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Peer Group"
                         value="peerGroup"
                         hide-details="auto"
@@ -93,7 +86,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Alumni"
                         value="alumni"
                         hide-details="auto"
@@ -101,7 +94,7 @@
                     </v-col>
                     <v-col>
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Media"
                         value="media"
                         hide-details="auto"
@@ -109,7 +102,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Word of Mouth"
                         value="wordOfMouth"
                         hide-details="auto"
@@ -117,7 +110,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Website"
                         value="website"
                         hide-details="auto"
@@ -125,7 +118,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Education Fair"
                         value="educationFair"
                         hide-details="auto"
@@ -133,7 +126,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="College Staff"
                         value="collegeStaff"
                         hide-details="auto"
@@ -141,7 +134,7 @@
                     </v-col>
                     <v-col cols="3">
                       <v-checkbox
-                        v-model="selectedSource"
+                        v-model="source"
                         label="Social Media"
                         value="socialMedia"
                         hide-details="auto"
@@ -179,174 +172,6 @@
                     </v-btn>
                   </v-card-actions>
                 </v-stepper-content>
-
-                <!-- <v-stepper-content step="2">
-                  <p>
-                    <v-row dense>
-                      <v-col cols="1" class="pt-3"> I </v-col>
-                      <v-col cols="4">
-                        <v-text-field
-                          hide-details="auto"
-                          placeholder="Name of Parent/Guardian of Applicant"
-                          type="text"
-                          color="primary"
-                          dense
-                        />
-                      </v-col>
-                      <v-col cols="3" class="pt-3"> father/mother/guardian of </v-col>
-                      <v-col cols="4">
-                        <v-text-field
-                          hide-details="auto"
-                          placeholder="Name of of Applicant"
-                          type="text"
-                          color="primary"
-                          dense
-                        />
-                      </v-col>
-                    </v-row>
-                    hereby undertake the responsibility of good and disciplined
-                    behavior of my ward as long as she remains a student of your
-                    college.
-                  </p>
-                  <p>
-                    I understand that the "personality enhancement programme"
-                    (PEP) and hospitality oriented programme are essential for
-                    the enhancement of my ward's personality. She will attend
-                    all the classes regularly and strict disciplinary action can
-                    be taken against her in case of irregularity.
-                  </p>
-                  <p>
-                    Futhermore i hold myself responsible to pay for the payment
-                    of all dues towards the college. I hereby certify that the
-                    details given by my ward in this form are correct. If any of
-                    them are found to be false, I understand that the admission
-                    of my ward will stand cancelled.
-                  </p>
-                  <v-row dense>
-                    <v-col cols="6">
-                      <div class="d-flex justify-center">
-                        <v-avatar size="200">
-                          <img src="../assets/avatar-3.png" alt="Logo" />
-                        </v-avatar>
-                      </div>
-                      <p class="text-center">(Father)</p>
-                      <v-text-field
-                        prepend-inner-icon="mdi-account"
-                        hide-details="auto"
-                        placeholder="Father's Full Name"
-                        type="text"
-                        color="primary"
-                      />
-                      <v-text-field
-                        prepend-inner-icon="mdi-phone"
-                        hide-details="auto"
-                        placeholder="Father's Phone"
-                        type="text"
-                        color="primary"
-                      />
-                      <v-file-input
-                        placeholder="Upload Father's Passport"
-                        v-model="image"
-                        color="primary"
-                        prepend-icon="mdi-camera"
-                        accept="image/*"
-                        show-size
-                        hide-details="auto"
-                      ></v-file-input>
-                      <v-file-input
-                        placeholder="Upload Father's Signature"
-                        color="primary"
-                        accept="image/*"
-                        show-size
-                        hide-details="auto"
-                      ></v-file-input>
-                    </v-col>
-                    <v-col cols="6">
-                      <div class="d-flex justify-center">
-                        <v-avatar size="200">
-                          <img src="../assets/avatar-2.png" alt="Logo" />
-                        </v-avatar>
-                      </div>
-                      <p class="text-center">(Mother)</p>
-                      <v-text-field
-                        prepend-inner-icon="mdi-account"
-                        hide-details="auto"
-                        placeholder="Mother's Full Name"
-                        type="text"
-                        color="primary"
-                      />
-                      <v-text-field
-                        prepend-inner-icon="mdi-phone"
-                        hide-details="auto"
-                        placeholder="Mother's Phone"
-                        type="text"
-                        color="primary"
-                      />
-                      <v-file-input
-                        placeholder="Upload Mother's Passport"
-                        color="primary"
-                        prepend-icon="mdi-camera"
-                        accept="image/*"
-                        show-size
-                        hide-details="auto"
-                      ></v-file-input>
-                      <v-file-input
-                        label="Upload Signature"
-                        color="primary"
-                        accept="image/*"
-                        show-size
-                        hide-details="auto"
-                      ></v-file-input>
-                    </v-col>
-                  </v-row>
-                  <p class="mt-4">
-                    In case of damage to the college property, books or
-                    equipment, I shall personally compensate in terms of money.
-                    My ward shall abide by the rules and regulations established
-                    by the college & she shall follow the dress code strictly.
-                  </p>
-                  <p>
-                    I understand that if my ward leaves the college after
-                    joining the classes, whatsoever may be the reason, I will
-                    not claim for refund of fees. All the fees/amount deposited
-                    with the institution shall be forfieted. I also agree to
-                    allow my ward to participate in all types of co-curricular
-                    activities, industry tours, excursion e.t.c and shall be
-                    fully responsible for her conduct.
-                  </p>
-                  <v-row justify="end">
-                    <v-col cols="6">
-                      <v-file-input
-                        label="Upload Parent/Guardian Signature"
-                        color="primary"
-                        accept="image/*"
-                        show-size
-                        hide-details="auto"
-                      ></v-file-input>
-                    </v-col>
-                  </v-row>
-                  <v-card-actions class="mt-4">
-                    <v-spacer></v-spacer>
-                    <v-btn
-                      color="primary white--text"
-                      class="text-capitalize"
-                      small
-                      @click="formStepper = 3"
-                    >
-                      Continue
-                    </v-btn>
-                    <v-btn
-                      small
-                      dark
-                      color="red white--text"
-                      class="text-capitalize"
-                      @click="formStepper = 1"
-                    >
-                      Back
-                    </v-btn>
-                  </v-card-actions>
-                </v-stepper-content> -->
-
                 <v-stepper-content step="2">
                   <div>
                     <v-icon color="success" class="mr-2">mdi-check</v-icon>
@@ -474,6 +299,7 @@
                   <v-card-actions class="mt-4">
                     <v-spacer></v-spacer>
                     <v-btn
+                      @click="submitForm()"
                       color="primary white--text"
                       class="text-capitalize"
                       small
@@ -494,6 +320,23 @@
               </v-stepper-items>
             </v-stepper>
           </v-card>
+          <v-card v-else>
+            <v-card-title>
+              Instructions for Payment process, please read carefully.
+            </v-card-title>
+            <v-card-text>
+              <ol>
+                <li>
+                  Please return to the dashboard and make your payment first.
+                </li>
+                <div>
+                  <v-btn to="/" color="info" small class="my-2 text-capitalize">
+                    Return to Dashboard
+                  </v-btn>
+                </div>
+              </ol>
+            </v-card-text>
+          </v-card>
         </v-col>
       </v-row>
     </v-container>
@@ -511,84 +354,68 @@ export default {
   },
   data: () => ({
     checkbox: false,
-    row: null,
-    selectedSource: [],
+    // row: null,
     datepicker: new Date(Date.now() - new Date().getTimezoneOffset() * 60000)
       .toISOString()
       .substr(0, 10),
-    image: null,
+    // image1: null,
     imageUrlPreview: require("../assets/avatar-2.png"),
     formStepper: 1,
-    userHeaders: [
-      { text: "Image", value: "image" },
-      { text: "Full Name", value: "name", sortable: true },
-      { text: "Phone", value: "phone", sortable: false },
-      { text: "Email", value: "email", sortable: false },
-      { text: "Nin", value: "nin", sortable: false },
-      { text: "State", value: "state" },
-      { text: "LGA", value: "lga" },
-      { text: "Address", value: "address" },
-      { text: "Lat/Lng" },
-      { text: "Date Joined", value: "createdAt" },
-      { text: "locate" },
-    ],
     paystackkey: "pk_test_225a9f8342058f3c6781f3a3c29c4c74a357348f", //paystack public key
     email: "foobar@example.com", // Customer email
     amount: 10000, // in kobo
     userPaid: false,
     // disabledCard: true,
-    paymentMade: false,
-    disabled: false
+    // paymentMade: false,
+    disabled: false,
+    fullName: "",
+    program: "",
+    source: [],
+    image: null,
   }),
   computed: {
     token() {
       return this.$store.getters.getToken;
     },
-    reference() {
-      let text = "";
-      let possible =
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789";
-
-      for (let i = 0; i < 10; i++)
-        text += possible.charAt(Math.floor(Math.random() * possible.length));
-
-      return text;
+    user() {
+      return this.$store.getters.getUser;
     },
   },
   methods: {
-    viewLocation(item) {
-      console.log("Item", item);
-      this.$router.push("/view/" + item._id);
-    },
     Preview_image() {
       this.imageUrlPreview = URL.createObjectURL(this.image);
     },
-    fetchCentres() {
-      fetch("https://lexnos.unicoms.ng/api/v1/centre", {
-        method: "GET",
+    submitForm() {
+      // console.log(this.fullName);
+      // console.log(this.program);
+      // console.log(this.source);
+      // console.log(this.image);
+      const fullName = this.fullName;
+      const program = this.program;
+      const source = this.source;
+      const image = this.image;
+      const formData = new FormData();
+      formData.append("image", image);
+      formData.append("fullName", fullName);
+      formData.append("program", program);
+      formData.append("source", source);
+      console.log(formData)
+      fetch("http://18.222.126.74:3000/api/forms/newform", {
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           "x-token": this.token,
         },
+        body: formData
       })
         .then((r) => r.json())
         .then((response) => {
           console.log("Response", response);
-          this.centres = response.payload;
         })
         .catch((error) => {
           console.log("Error>>>", error);
         });
     },
-    callback: function (response) {
-      console.log(response);
-    },
-    close: function () {
-      console.log("Payment closed");
-    },
-  },
-  mounted() {
-    this.fetchCentres();
   },
 };
 </script>

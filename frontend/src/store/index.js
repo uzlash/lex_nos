@@ -52,7 +52,7 @@ export default new Vuex.Store({
         password: authData.password,
       };
       commit("startLoader");
-      fetch("/api/v1/auth/login", {
+      fetch("http://18.222.126.74/api/v1/auth/login", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -61,29 +61,31 @@ export default new Vuex.Store({
       })
         .then((r) => r.json())
         .then((response) => {
-          console.log("SIGNIN RESPONSE", response);
+          // console.log("SIGNIN RESPONSE", response);
           //status failed or false
           if (response.status === "failed") {
+            this._vm.$toast.error(`${response.message}`);
             commit("stopLoader");
-            commit("signInError", response.message);
+            // commit("signInError", response.message);
           } else {
-            console.log("RESPONSE",response)
-            const { token, user } = response
-            commit('loginUser', {
+            // console.log("RESPONSE", response);
+            const { token, user } = response;
+            commit("loginUser", {
               token: token,
               user: user,
-            })
+            });
             //Emit Socket Event
             //Save To Local Storage
-            localStorage.setItem('token', token)
-            localStorage.setItem('user', JSON.stringify(user))
+            localStorage.setItem("token", token);
+            localStorage.setItem("user", JSON.stringify(user));
             router.push("/");
             commit("stopLoader");
           }
         })
         .catch((error) => {
           console.log("Error>>>", error);
-          commit("signInError", error);
+          this._vm.$toast.error(error.message);
+          // commit("signInError", error);
           commit("stopLoader");
         });
     },
@@ -95,7 +97,7 @@ export default new Vuex.Store({
         password: authData.password,
       };
       commit("startLoader");
-      fetch("/api/v1/auth/signup", {
+      fetch("http://18.222.126.74/api/v1/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -106,17 +108,20 @@ export default new Vuex.Store({
         .then((response) => {
           console.log("RESPONSE>>>", response);
           if (response.status === "failed") {
-            commit("signInError", response.message);
+            this._vm.$toast.error(`${response.message}`);
+            // commit("signInError", response.message);
             commit("stopLoader");
           } else {
-            commit("registerUser", { user: response.payload });
-            commit("SignUpSuccessful");
+            // commit("registerUser", { user: response.payload });
+            this._vm.$toast.success(`${response}`);
+            router.push("/login");
+            // commit("SignUpSuccessful");
             commit("stopLoader");
           }
         })
         .catch((error) => {
           console.log("Error>>>>>>>>>>>>>", error);
-          commit("signUpError", error);
+          // commit("signUpError", error);
           commit("stopLoader");
         });
     },
